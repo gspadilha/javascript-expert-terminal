@@ -1,6 +1,6 @@
 import { writeFile, readFile } from "fs/promises";
 
-export const save = async (data) => {
+const readDatabase = async () => {
   const { pathname: databaseFile } = new URL(
     "../../database.json",
     import.meta.url
@@ -12,11 +12,30 @@ export const save = async (data) => {
     pathNormalized = pathNormalized.substring(3, pathNormalized.length);
   }
 
-  const curretData = JSON.parse(await readFile(pathNormalized));
+  const data = [...JSON.parse(await readFile(pathNormalized))];
 
-  delete data.language;
+  return {
+    data,
+    pathNormalized,
+  };
+};
 
-  curretData.push(data);
+export const save = async (newData) => {
+  const { data, pathNormalized } = await readDatabase();
 
-  await writeFile(pathNormalized, JSON.stringify(curretData));
+  delete newData.language;
+
+  data.push(newData);
+
+  await writeFile(pathNormalized, JSON.stringify(data));
+};
+
+export const maxId = async () => {
+  const { data } = await readDatabase();
+
+  const arr = data.map((item) => Number(item.id));
+
+  const max = Math.max(...arr);
+
+  return max === undefined ? 1 : max + 1;
 };

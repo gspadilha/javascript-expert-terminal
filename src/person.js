@@ -1,7 +1,10 @@
+import { maxId } from "./repository.js";
+
 const ENTRY_SEPARATOR = " ";
 const VEHICLES_ENTRY_SEPARATOR = ",";
 
 const DEFAULT_LOCALE = "pt-BR";
+
 export default class Person {
   constructor({ id, vehicles, kmTraveled, from, to, value }) {
     this.language = DEFAULT_LOCALE;
@@ -19,12 +22,15 @@ export default class Person {
     return this;
   }
 
-  static getInformation(text) {
-    const [id, vehicles, kmTraveled, from, to, value] =
-      text.split(ENTRY_SEPARATOR);
+  static async getInformation(text) {
+    const [vehicles, kmTraveled, from, to, value] = text.split(ENTRY_SEPARATOR);
+
+    const id = await maxId();
+
+    console.log(id);
 
     return new Person({
-      id,
+      id: id,
       vehicles: vehicles
         .split(VEHICLES_ENTRY_SEPARATOR)
         .map((item) => item.trim()),
@@ -62,9 +68,9 @@ export default class Person {
 
   toDate(data) {
     return new Intl.DateTimeFormat(this.language, {
-      year: "numeric",
-      month: "long",
       day: "2-digit",
+      month: "long",
+      year: "numeric",
     }).format(data);
   }
 

@@ -21,7 +21,7 @@ async function mainLoop() {
       return;
     }
 
-    const person = Person.getInformation(answer);
+    const person = await Person.getInformation(answer);
     terminalController.updateTable(person);
     save(person);
 
