@@ -1,18 +1,36 @@
+const ENTRY_SEPARATOR = " ";
+const VEHICLES_ENTRY_SEPARATOR = ",";
 export default class Person {
-  language = "en-US";
-
   constructor({ id, vehicles, kmTraveled, from, to, value }) {
-    this.id = id;
+    this.language = "en-US";
+
+    this.id = Number(id);
     this.vehicles = vehicles;
-    this.kmTraveled = kmTraveled;
-    this.from = from;
-    this.to = to;
-    this.value = value;
+    this.kmTraveled = Number(kmTraveled);
+    this.from = new Date(from);
+    this.to = new Date(to);
+    this.value = Number(value);
   }
 
   setLocale(language) {
     this.language = language;
     return this;
+  }
+
+  static getInformation(text) {
+    const [id, vehicles, kmTraveled, from, to, value] =
+      text.split(ENTRY_SEPARATOR);
+
+    return new Person({
+      id,
+      vehicles: vehicles
+        .split(VEHICLES_ENTRY_SEPARATOR)
+        .map((item) => item.trim()),
+      kmTraveled,
+      from,
+      to,
+      value,
+    });
   }
 
   format() {
@@ -45,7 +63,7 @@ export default class Person {
       year: "numeric",
       month: "long",
       day: "2-digit",
-    }).format(new Date(data));
+    }).format(data);
   }
 
   toMoney(data) {
