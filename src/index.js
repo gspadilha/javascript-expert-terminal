@@ -2,6 +2,8 @@ import database from "../../database.json" assert { type: "json" };
 
 import Person from "./person.js";
 
+import { save } from "./repository.js";
+
 import {
   TerminalController,
   STOP_TERMINAL_TERM,
@@ -21,6 +23,7 @@ async function mainLoop() {
 
     const person = Person.getInformation(answer);
     terminalController.updateTable(person);
+    save(person);
 
     return mainLoop();
   } catch (error) {
