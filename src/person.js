@@ -1,8 +1,10 @@
 const ENTRY_SEPARATOR = " ";
 const VEHICLES_ENTRY_SEPARATOR = ",";
+
+const DEFAULT_LOCALE = "pt-BR";
 export default class Person {
   constructor({ id, vehicles, kmTraveled, from, to, value }) {
-    this.language = "en-US";
+    this.language = DEFAULT_LOCALE;
 
     this.id = Number(id);
     this.vehicles = vehicles;

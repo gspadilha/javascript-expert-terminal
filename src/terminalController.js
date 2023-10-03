@@ -6,17 +6,16 @@ import chalkTable from "chalk-table";
 
 import Person from "./person.js";
 
-const DEFAULT_LOCALE = "pt-BR";
 export const STOP_TERMINAL_TERM = ":q";
 
 export class TerminalController {
   constructor() {
     this.print = {};
-    this.data = {};
+    this.data = [];
     this.terminal = {};
   }
 
-  initializeTerminal(database, language = DEFAULT_LOCALE) {
+  initializeTerminal(database) {
     draftlog(console).addLineListener(process.stdin);
 
     this.terminal = readline.createInterface({
@@ -24,7 +23,7 @@ export class TerminalController {
       output: process.stdout,
     });
 
-    this.initializeTable(database, language);
+    this.initializeTable(database);
   }
 
   closeTerminal() {
@@ -32,13 +31,20 @@ export class TerminalController {
     this.terminal.close();
   }
 
-  initializeTable(database, language) {
-    const data = database.map((item) =>
-      new Person(item).setLocale(language).format()
-    );
+  initializeTable(database) {
+    this.data = database;
+
+    const data = database.map((item) => new Person(item).format());
 
     this.print = console.draft(chalkTable(this.setTableOptions(), data));
-    this.data = data;
+  }
+
+  updateTable(item) {
+    this.data.push(item);
+
+    const data = this.data.map((item) => new Person(item).format());
+
+    this.print = console.draft(chalkTable(this.setTableOptions(), data));
   }
 
   question(message = "") {

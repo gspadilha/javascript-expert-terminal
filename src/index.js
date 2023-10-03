@@ -20,8 +20,7 @@ async function mainLoop() {
     }
 
     const person = Person.getInformation(answer);
-
-    console.log(person);
+    terminalController.updateTable(person);
 
     return mainLoop();
   } catch (error) {
